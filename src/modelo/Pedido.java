@@ -71,6 +71,6 @@ public class Pedido {
 
     @Override
     public String toString() {
-        return "Pedido #" + idPedido;
+        return "Pedido #" + idPedido + " - Estado: " + estado;
     }
 }
