@@ -59,6 +59,6 @@ private int idProducto;
 
     @Override
     public String toString() {
-        return nombre;
+        return nombre +"(" + stock + ")-  ₡" + precio ;
     }
 }
