@@ -6,7 +6,7 @@ package modelo;
 
 /**
  *
- * @author Geirel
+ * @author Joseline
  */
 public class Producto {
     
@@ -59,6 +59,6 @@ private int idProducto;
 
     @Override
     public String toString() {
-        return nombre +"(" + stock + ")-  ₡" + precio ;
+        return nombre;
     }
 }

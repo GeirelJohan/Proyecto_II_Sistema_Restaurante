@@ -6,7 +6,7 @@ package modelo;
 
 /**
  *
- * @author Geirel
+ * @author Joseline
  */
 public class Cliente {
     
@@ -59,6 +59,6 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return nombre + "("+ telefono + "," + correo + ")";
+        return nombre;
     }
 }

@@ -6,7 +6,7 @@ package modelo;
 
 /**
  *
- * @author Geirel
+ * @author Joseline
  */
 public class Empleado {
     
@@ -49,6 +49,6 @@ public class Empleado {
 
     @Override
     public String toString() {
-        return nombre + " - " + cargo ;
+        return nombre;
     }
 }
