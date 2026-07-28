@@ -42,3 +42,30 @@ CREATE TABLE DetallePedido(
     FOREIGN KEY(idPedido) REFERENCES Pedido(idPedido),
     FOREIGN KEY(idProducto) REFERENCES Producto(idProducto)
 );
+
+SELECT idCliente
+FROM Cliente;
+
+SELECT * FROM Empleado;
+
+SELECT idEmpleado
+FROM Empleado;
+
+INSERT INTO Empleado(nombre, cargo)
+VALUES ('Administrador', 'Encargado');
+
+INSERT INTO Empleado (nombre, cargo)
+VALUES
+('Juan Pérez', 'Mesero'),
+('María Gómez', 'Cajera'),
+('Carlos Rodríguez', 'Administrador');
+
+DROP TABLE Empleado;
+
+SELECT * 
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_NAME = 'Empleado';
+
+SELECT COLUMN_NAME
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'Empleado';

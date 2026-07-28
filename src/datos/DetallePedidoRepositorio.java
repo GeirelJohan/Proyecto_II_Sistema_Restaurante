@@ -18,10 +18,10 @@ public class DetallePedidoRepositorio {
     
     public boolean insertar(DetallePedido detalle) {
 
-        String sql = "INSERT INTO DetallePedido(idPedido,idProducto,cantidad,precio) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO DetallePedido(idPedido, idProducto, cantidad, precio) VALUES (?, ?, ?, ?)";
 
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try(Connection con = Conexion.getConexion();
+            PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, detalle.getIdPedido());
             ps.setInt(2, detalle.getIdProducto());
@@ -30,24 +30,23 @@ public class DetallePedidoRepositorio {
 
             return ps.executeUpdate() > 0;
 
-        } catch (SQLException e) {
+        } catch(SQLException e) {
             System.out.println("Error al insertar detalle: " + e.getMessage());
             return false;
         }
     }
 
-    public List<DetallePedido> listar() {
+    public List<DetallePedido> listar(){
 
         List<DetallePedido> lista = new ArrayList<>();
 
         String sql = "SELECT * FROM DetallePedido";
 
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try(Connection con = Conexion.getConexion();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()) {
 
-            while (rs.next()) {
-
+            while(rs.next()) {
                 DetallePedido detalle = new DetallePedido();
 
                 detalle.setIdDetalle(rs.getInt("idDetalle"));
@@ -58,82 +57,77 @@ public class DetallePedidoRepositorio {
 
                 lista.add(detalle);
             }
+        } catch(SQLException e){
 
-        } catch (SQLException e) {
             System.out.println("Error al listar detalles: " + e.getMessage());
+
         }
+
 
         return lista;
+
     }
 
-    public DetallePedido buscarPorId(int idDetalle) {
 
-        String sql = "SELECT * FROM DetallePedido WHERE idDetalle=?";
 
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, idDetalle);
-
-            try (ResultSet rs = ps.executeQuery()) {
-
-                if (rs.next()) {
-
-                    DetallePedido detalle = new DetallePedido();
-
-                    detalle.setIdDetalle(rs.getInt("idDetalle"));
-                    detalle.setIdPedido(rs.getInt("idPedido"));
-                    detalle.setIdProducto(rs.getInt("idProducto"));
-                    detalle.setCantidad(rs.getInt("cantidad"));
-                    detalle.setPrecio(rs.getDouble("precio"));
-
-                    return detalle;
-                }
-
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Error al buscar detalle: " + e.getMessage());
-        }
-
-        return null;
-    }
-
-    public boolean actualizar(DetallePedido detalle) {
-
-        String sql = "UPDATE DetallePedido SET idPedido=?, idProducto=?, cantidad=?, precio=? WHERE idDetalle=?";
-
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, detalle.getIdPedido());
-            ps.setInt(2, detalle.getIdProducto());
-            ps.setInt(3, detalle.getCantidad());
-            ps.setDouble(4, detalle.getPrecio());
-            ps.setInt(5, detalle.getIdDetalle());
-
-            return ps.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            System.out.println("Error al actualizar detalle: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean eliminar(int idDetalle) {
+    public boolean eliminar(int idDetalle){
 
         String sql = "DELETE FROM DetallePedido WHERE idDetalle=?";
 
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+
+        try(Connection con = Conexion.getConexion();
+            PreparedStatement ps = con.prepareStatement(sql)){
+
 
             ps.setInt(1, idDetalle);
 
             return ps.executeUpdate() > 0;
 
-        } catch (SQLException e) {
+
+        } catch(SQLException e){
+
             System.out.println("Error al eliminar detalle: " + e.getMessage());
             return false;
         }
+    }
+    public List<Object[]> listarDetalleCompleto() {
+
+        List<Object[]> lista = new ArrayList<>();
+
+        String sql =
+            "SELECT p.idPedido, p.idCliente, p.idEmpleado, " +
+            "pr.nombre AS producto, d.cantidad, d.precio, p.estado " +
+            "FROM Pedido p " +
+            "INNER JOIN DetallePedido d ON p.idPedido = d.idPedido " +
+            "INNER JOIN Producto pr ON d.idProducto = pr.idProducto " +
+            "ORDER BY p.idPedido";
+
+        try(Connection con = Conexion.getConexion();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()) {
+
+            while(rs.next()) {
+
+                lista.add(new Object[]{
+
+                    rs.getInt("idPedido"),
+                    rs.getInt("idCliente"),
+                    rs.getInt("idEmpleado"),
+                    rs.getString("producto"),
+                    rs.getInt("cantidad"),
+                    rs.getDouble("precio"),
+                    rs.getString("estado")
+
+                });
+
+            }
+
+        } catch(SQLException e){
+
+            System.out.println(e.getMessage());
+
+        }
+
+        return lista;
     }
 }

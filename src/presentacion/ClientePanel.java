@@ -16,6 +16,20 @@ import negocio.ValidacionException;
 public class ClientePanel extends javax.swing.JPanel {
 
     private ClienteNegocio clienteNegocio = new ClienteNegocio();
+    private void tblClientesMouseClicked(java.awt.event.MouseEvent evt) {
+
+        int fila = tblClientes.getSelectedRow();
+
+        if(fila >= 0){
+
+            txtID.setText(tblClientes.getValueAt(fila, 0).toString());
+            txtNombre.setText(tblClientes.getValueAt(fila, 1).toString());
+            txtTelefono.setText(tblClientes.getValueAt(fila, 2).toString());
+            txtCorreo.setText(tblClientes.getValueAt(fila, 3).toString());
+
+        }
+
+    }
     /**
      * Creates new form ClientePanel
      */
@@ -107,13 +121,12 @@ public class ClientePanel extends javax.swing.JPanel {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel4)
                                 .addComponent(jLabel1)))
-                        .addGap(33, 33, 33)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtID, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                            .addComponent(txtNombre)
+                            .addComponent(txtTelefono)
+                            .addComponent(txtCorreo)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(btnGuardar)
@@ -142,10 +155,10 @@ public class ClientePanel extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -156,7 +169,7 @@ public class ClientePanel extends javax.swing.JPanel {
                     .addComponent(btnEliminar)
                     .addComponent(btnBuscar)
                     .addComponent(btnLimpiar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(111, 111, 111))
         );
@@ -171,57 +184,58 @@ public class ClientePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_txtCorreoActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        // TODO add your handling code here:
-         try {
+        try {
 
-        Cliente cliente = new Cliente();
+            Cliente cliente = new Cliente();
 
-        cliente.setIdCliente(Integer.parseInt(txtID.getText()));
-        cliente.setNombre(txtNombre.getText());
-        cliente.setTelefono(txtTelefono.getText());
-        cliente.setCorreo(txtCorreo.getText());
+            cliente.setIdCliente(Integer.parseInt(txtID.getText()));
+            cliente.setNombre(txtNombre.getText());
+            cliente.setTelefono(txtTelefono.getText());
+            cliente.setCorreo(txtCorreo.getText());
 
-        if (clienteNegocio.actualizar(cliente)) {
 
-            JOptionPane.showMessageDialog(this, "Cliente actualizado correctamente.");
+            if(clienteNegocio.actualizar(cliente)) {
 
-            listarClientes();
-            limpiar();
+                JOptionPane.showMessageDialog(this,
+                        "Cliente actualizado correctamente.");
+
+                listarClientes();
+                limpiar();
+
+            } else {
+
+                JOptionPane.showMessageDialog(this,
+                        "No se pudo actualizar el cliente.");
+
+            }
+
+
+        } catch(Exception e) {
+
+            JOptionPane.showMessageDialog(this,
+                    e.getMessage());
 
         }
-
-    } catch (Exception e) {
-
-        JOptionPane.showMessageDialog(this, e.getMessage());
-
-    }
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
-         try {
+        try {
+            String nombre = txtNombre.getText();
+            Cliente cliente = clienteNegocio.buscarPorNombre(nombre);
+            if(cliente != null) {
+                txtID.setText(String.valueOf(cliente.getIdCliente()));
+                txtNombre.setText(cliente.getNombre());
+                txtTelefono.setText(cliente.getTelefono());
+                txtCorreo.setText(cliente.getCorreo());
 
-        int id = Integer.parseInt(txtID.getText());
-
-        Cliente cliente = clienteNegocio.buscarPorId(id);
-
-        if (cliente != null) {
-
-            txtNombre.setText(cliente.getNombre());
-            txtTelefono.setText(cliente.getTelefono());
-            txtCorreo.setText(cliente.getCorreo());
-
-        } else {
-
-            JOptionPane.showMessageDialog(this, "Cliente no encontrado.");
-
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Cliente no encontrado.");
+            }
+        } catch(Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    e.getMessage());
         }
-
-    } catch (Exception e) {
-
-        JOptionPane.showMessageDialog(this, e.getMessage());
-
-    }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
@@ -251,29 +265,34 @@ public class ClientePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_txtIDActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
-         try {
+        try {
 
-        int id = Integer.parseInt(txtID.getText());
+            int id = Integer.parseInt(txtID.getText());
 
-        if (clienteNegocio.eliminar(id)) {
 
-            JOptionPane.showMessageDialog(this, "Cliente eliminado correctamente.");
+            int respuesta = JOptionPane.showConfirmDialog(this,
+                    "¿Desea eliminar este cliente?",
+                    "Confirmar eliminación",
+                    JOptionPane.YES_NO_OPTION);
+            if(respuesta == JOptionPane.YES_OPTION) {
+                if(clienteNegocio.eliminar(id)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Cliente eliminado correctamente.");
+                    listarClientes();
+                    limpiar();
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "No se pudo eliminar el cliente.");
+                }
+            }
+        } catch(Exception e) {
 
-            listarClientes();
-            limpiar();
-
+            JOptionPane.showMessageDialog(this,
+                    "Seleccione un cliente válido.");
         }
-
-    } catch (Exception e) {
-
-        JOptionPane.showMessageDialog(this, e.getMessage());
-
-    }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-        // TODO add your handling code here:
          limpiar();
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
@@ -281,19 +300,15 @@ private void listarClientes(){
     DefaultTableModel modelo = (DefaultTableModel) tblClientes.getModel();
     
     modelo.setRowCount(0);
-    
     for(Cliente cliente : clienteNegocio.listar()) {
         modelo.addRow(new Object[] {
             cliente.getIdCliente(),
             cliente.getNombre(),
             cliente.getTelefono(),
-            cliente.getCorreo()
-                
+            cliente.getCorreo()           
         });
-    }
-        
+    }      
  }
-
 private void limpiar(){
     txtID.setText("");
     txtNombre.setText("");

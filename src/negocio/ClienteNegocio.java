@@ -65,18 +65,15 @@ public class ClienteNegocio {
 
     }
 
-    public Cliente buscarPorId(int idCliente) throws ValidacionException {
+    public Cliente buscarPorNombre(String nombre) throws ValidacionException {
 
-        if (idCliente <= 0) {
+        if(nombre == null || nombre.trim().isEmpty()) {
+        throw new ValidacionException("Ingrese un nombre.");
 
-            throw new ValidacionException("El ID del cliente es inválido.");
+       }
 
-        }
-
-        return repositorio.buscarPorId(idCliente);
-
-    }
-
+       return repositorio.buscarPorNombre(nombre);
+   }
     public boolean actualizar(Cliente cliente) throws ValidacionException {
 
         if (cliente.getIdCliente() <= 0) {

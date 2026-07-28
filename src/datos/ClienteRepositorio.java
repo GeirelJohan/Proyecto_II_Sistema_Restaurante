@@ -66,14 +66,14 @@ public class ClienteRepositorio {
         return lista;
     }
     
-    public Cliente buscarPorId(int idCliente) {
+    public Cliente buscarPorNombre(String nombre) {
 
-        String sql = "SELECT * FROM Cliente WHERE idCliente = ?";
+        String sql = "SELECT * FROM Cliente WHERE nombre = ?";
 
         try (Connection con = Conexion.getConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, idCliente);
+            ps.setString(1, nombre);
 
             try (ResultSet rs = ps.executeQuery()) {
 
@@ -89,11 +89,9 @@ public class ClienteRepositorio {
                     return cliente;
                 }
             }
-
         } catch (SQLException e) {
-            System.out.println("Error al buscar cliente: " + e.getMessage());
+            System.out.println("Error al buscar cliente por nombre: " + e.getMessage());
         }
-
         return null;
     }
     
@@ -116,7 +114,7 @@ public class ClienteRepositorio {
             return false;
         }
     }
-    
+
     public boolean eliminar(int idCliente) {
         String sql = "DELETE FROM Cliente WHERE idCliente = ?";
         try (Connection con = Conexion.getConexion();
