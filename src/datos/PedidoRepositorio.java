@@ -21,19 +21,36 @@ public class PedidoRepositorio {
         String sql = "INSERT INTO Pedido(idCliente, idEmpleado, fecha, estado) VALUES (?, ?, ?, ?)";
 
         try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
 
             ps.setInt(1, pedido.getIdCliente());
             ps.setInt(2, pedido.getIdEmpleado());
             ps.setDate(3, new java.sql.Date(pedido.getFecha().getTime()));
             ps.setString(4, pedido.getEstado());
 
-            return ps.executeUpdate() > 0;
 
-        } catch (SQLException e) {
+            int filas = ps.executeUpdate();
+
+
+            if(filas > 0){
+
+                ResultSet rs = ps.getGeneratedKeys();
+
+                if(rs.next()){
+
+                    pedido.setIdPedido(rs.getInt(1));
+
+                }
+
+                return true;
+            }
+
+
+        } catch(SQLException e){
             System.out.println("Error al insertar pedido: " + e.getMessage());
-            return false;
         }
+        return false;
     }
 
     public List<Pedido> listar() {
@@ -121,18 +138,49 @@ public class PedidoRepositorio {
 
     public boolean eliminar(int idPedido) {
 
-        String sql = "DELETE FROM Pedido WHERE idPedido=?";
+        Connection con = null;
+        try {
+            con = Conexion.getConexion();
+            con.setAutoCommit(false);
 
-        try (Connection con = Conexion.getConexion();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+            String sqlDetalle = "DELETE FROM DetallePedido WHERE idPedido = ?";
+            PreparedStatement psDetalle = con.prepareStatement(sqlDetalle);
+            psDetalle.setInt(1, idPedido);
+            psDetalle.executeUpdate();
 
-            ps.setInt(1, idPedido);
+            String sqlPedido = "DELETE FROM Pedido WHERE idPedido = ?";
+            PreparedStatement psPedido = con.prepareStatement(sqlPedido);
+            psPedido.setInt(1, idPedido);
 
-            return ps.executeUpdate() > 0;
+            boolean eliminado = psPedido.executeUpdate() > 0;
+
+            con.commit();
+
+            return eliminado;
 
         } catch (SQLException e) {
+
+            try {
+                if (con != null) {
+                    con.rollback();
+                }
+            } catch (SQLException ex) {
+            }
+
             System.out.println("Error al eliminar pedido: " + e.getMessage());
             return false;
+
+        } finally {
+
+            try {
+                if (con != null) {
+                    con.setAutoCommit(true);
+                    con.close();
+                }
+            } catch (SQLException ex) {
+            }
+
         }
+
     }
 }

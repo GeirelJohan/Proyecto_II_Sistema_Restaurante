@@ -6,7 +6,7 @@ package modelo;
 
 /**
  *
- * @author Geirel
+ * @author Joseline
  */
 public class DetallePedido {
     
@@ -69,6 +69,6 @@ public class DetallePedido {
 
     @Override
     public String toString() {
-        return "Detalle #" + idDetalle + " -> Pedido " + idPedido + ", Producto " + idProducto + ", Cantidad " + cantidad + ", SubTotal ₡ " + precio ;
+        return "Detalle #" + idDetalle;
     }
 }

@@ -64,14 +64,14 @@ public class ProductoRepositorio {
         return lista;
     }
 
-    public Producto buscarPorId(int idProducto) {
+    public Producto buscarPorNombre(String nombre) {
 
-        String sql = "SELECT * FROM Producto WHERE idProducto = ?";
+        String sql = "SELECT * FROM Producto WHERE nombre = ?";
 
         try (Connection con = Conexion.getConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, idProducto);
+            ps.setString(1, nombre);
 
             try (ResultSet rs = ps.executeQuery()) {
 
@@ -86,10 +86,13 @@ public class ProductoRepositorio {
 
                     return producto;
                 }
+
             }
 
         } catch (SQLException e) {
-            System.out.println("Error al buscar producto: " + e.getMessage());
+
+            System.out.println("Error al buscar producto por nombre: " + e.getMessage());
+
         }
 
         return null;

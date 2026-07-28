@@ -6,7 +6,7 @@ package modelo;
 
 /**
  *
- * @author Geirel
+ * @author Joseline
  */
 import java.util.Date;
 
@@ -71,6 +71,6 @@ public class Pedido {
 
     @Override
     public String toString() {
-        return "Pedido #" + idPedido + " - Estado: " + estado;
+        return "Pedido #" + idPedido;
     }
 }

@@ -62,14 +62,12 @@ public class ProductoNegocio {
 
     }
 
-    public Producto buscarPorId(int idProducto) throws ValidacionException {
+    public Producto buscarPorNombre(String nombre) throws ValidacionException {
 
-        if (idProducto <= 0) {
-            throw new ValidacionException("ID inválido.");
+        if(nombre == null || nombre.trim().isEmpty()) {
+            throw new ValidacionException("Ingrese un nombre.");
         }
-
-        return repositorio.buscarPorId(idProducto);
-
+        return repositorio.buscarPorNombre(nombre);
     }
 
     public boolean actualizar(Producto producto) throws ValidacionException {
